@@ -8,5 +8,13 @@ int main(){
     if (!file.is_open()){
         cout<<"File isn't initialised"<<endl;
     }
+    int N;
+    cout<<"Enter Number of spins"<<endl;
+    cin>>N;
+    for (int i = 0; i < N; i++){
+        for (int i = 0; i < N; i++){
+            
+        }
+    }
     
 }
