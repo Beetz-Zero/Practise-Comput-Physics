@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <math.h>
 using namespace std;
 
 int main(){
@@ -13,8 +14,7 @@ int main(){
     cin>>N;
     for (int i = 0; i < N; i++){
         for (int i = 0; i < N; i++){
-            
+            cout<<"bruh"<<endl;
         }
     }
-    
 }
