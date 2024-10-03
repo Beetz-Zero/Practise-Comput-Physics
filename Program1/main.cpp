@@ -1,20 +1,28 @@
 #include <iostream>
-#include <string>
 #include <fstream>
+#include <sstream>
+#include <vector> 
+#include <string>
+
 using namespace std;
 
 int main(){
-    std::ifstream file("D:/Programmin/C++/Practise-Comput-Physics/XMCD#0000..txt");
-    if (!file.is_open()){
-        cout<<"File isn't initialised"<<endl;
+    ifstream InputFile("234.txt");    
+
+    string  line;
+    vector<float> numbers; 
+
+    while(getline(InputFile, line)){
+
+        istringstream frag(line);
+        float number;
+
+        while(frag >> number){
+            numbers.push_back(number);
+        }    
+    }    
+    for (float num : numbers) {
+        cout << num << " ";
     }
-    int N;
-    cout<<"Enter Number of spins"<<endl;
-    cin>>N;
-    for (int i = 0; i < N; i++){
-        for (int i = 0; i < N; i++){
-            
-        }
-    }
-    
-}
+    InputFile.close();
+}   
