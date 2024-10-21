@@ -31,12 +31,13 @@ int main(){
 
 // File initilization
 
-    ifstream InputFile("XMCD#0000..txt");    
+    ifstream InputFile("XMCD#0000..txt");   
+    ofstream OutputFile("Out.txt"); 
 
 //------------------------------------------------------------------------------------------------------------//
 // Count number of lines
 
-    int N = counter("XMCD#0000..txt");
+    double N = counter("XMCD#0000..txt");
 
     cout << "Число строк в файле: " << N << endl;  
 
@@ -50,18 +51,14 @@ int main(){
     spin spin[1100];
 
     int k = 0; // Interior counter for each parametr of spin
+    for(int i = 0;getline(InputFile,line);i++){
+        istringstream file(line);
 
-    while(getline(InputFile, line)){
-
-        istringstream iss(line);
-
-        iss >> spin[k].x;
-        iss >> spin[k].y;
-        iss >> spin[k].mx;
-        iss >> spin[k].my;
-        iss >> spin[k].junk;  
-        k++;
-
+        file >> spin[i].x;
+        file >> spin[i].y;
+        file >> spin[i].mx;
+        file >> spin[i].my;
+        file >> spin[i].junk; 
     }
     /*int n = k;
 
@@ -70,18 +67,21 @@ int main(){
     }*/
 
 //------------------------------------------------------------------------------------------------------------//
+    double is_eneregy = 0;
+    for (float qx = -5; qx < 6; qx++){
+        for (float qy = -5; qy < 6; qy++){
+            for(int i = 0; i < N; i++){
+                for(int j = 0; j < N; j++){
 
-    for(int i = 0; i < N; i++){
-        for(int j = 0; j < N; j++){
+                double value = (qx *(spin[i].x - spin[j].x) + qy * (spin[i].y - spin[j].y));
 
-            double value = (spin[i].x*(spin[i].x - spin[j].x) + spin[j].x * (spin[i].y - spin[j].y));
-
-            double is_eneregy = (spin[i].mx * spin[j].mx + spin[i].my * spin[j].my) * (cos(value)*(180/3.14));
-
-            cout << is_eneregy << endl;
+                is_eneregy += (spin[i].mx * spin[j].mx + spin[i].my * spin[j].my) * (cos(value*(180/3.14)));
+                }
+            }
+            is_eneregy = is_eneregy * (1/N);
+            OutputFile << is_eneregy<<" "<< qx << " " << qy << endl;
         }
     }
 
     InputFile.close();
-
 }
