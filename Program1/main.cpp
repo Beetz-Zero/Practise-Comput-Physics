@@ -21,8 +21,7 @@ int counter(string x){
     int N = 0;
     for (int i = 0; getline(InputFile, line); i++)
     {
-        i++;
-        N += i;
+        N++;
     }
     return N;
 }
