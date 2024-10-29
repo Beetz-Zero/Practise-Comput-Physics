@@ -3,7 +3,7 @@
 #include <sstream>
 #include <string>
 #include <math.h>
-#include <complex> 
+#include <vector> 
 
 using namespace std;
 
@@ -13,43 +13,22 @@ struct spin{
     float mx;
     float my;
     float junk;
-};
-
-int counter(string x){
-    ifstream InputFile(x);
-    string  line;
-    int N = 0;
-
-    while(getline(InputFile, line)){
-        N++;
-    }
-
-    return N;
-}
+};  
 
 int main(){
-
 // File initilization
 
-    ifstream InputFile("XMCD#0000..txt");    
-
-//------------------------------------------------------------------------------------------------------------//
-// Count number of lines
-
-    int N = counter("XMCD#0000..txt");
-
-    cout << "Число строк в файле: " << N << endl;  
-
-//------------------------------------------------------------------------------------------------------------//
+    ifstream InputFile("XMCD#0000_rotated_norm.txt");    
+    ofstream OutputFile("Out_1.txt");
+    
 // Filling spin of data
-
-    int vect_r;
+    double is_eneregy = 0;
 
     string line;
     
     spin spin[1100];
 
-    int k = 0; // Interior counter for each parametr of spin
+    int k = 0; 
 
     while(getline(InputFile, line)){
 
@@ -63,25 +42,25 @@ int main(){
         k++;
 
     }
-    /*int n = k;
 
-    for(k = 0; k < n; k++){     
-        cout << spin[k].x << '\t' << spin[k].y << '\t' << spin[k].mx << '\t' << spin[k].my << endl;
-    }*/
+    cout << "Число строк в файле: " << k << endl;  
 
-//------------------------------------------------------------------------------------------------------------//
+    for(double qx = -5; qx < 5.1f; qx += .1f){    
+        for(double qy = -5; qy < 5.1f; qy += .1f){
 
-    for(int i = 0; i < N; i++){
-        for(int j = 0; j < N; j++){
+            for(int i = 0; i < k; i++){
+                for(int j = 0; j < k; j++){
 
-            double value = (spin[i].x*(spin[i].x - spin[j].x) + spin[j].x * (spin[i].y - spin[j].y));
+                    float value = (qx * (spin[i].x - spin[j].x) + qy * (spin[i].y - spin[j].y));
 
-            double is_eneregy = (spin[i].mx * spin[j].mx + spin[i].my * spin[j].my) * (cos(value)*(180/3.14));
-
-            cout << is_eneregy << endl;
+                    is_eneregy += (spin[i].mx * spin[j].mx + spin[i].my * spin[j].my) * cos(value);     
+                }
+            }
+            is_eneregy = is_eneregy * (1/k);
+            OutputFile << is_eneregy << ' ' << qx << ' ' << qy << endl;
         }
     }
-
+    
     InputFile.close();
-
+    return 0;
 }
