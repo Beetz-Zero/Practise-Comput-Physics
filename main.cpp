@@ -3,7 +3,6 @@
 #include <sstream>
 #include <string>
 #include <math.h>
-#include <vector> 
 
 using namespace std;
 
@@ -15,6 +14,17 @@ struct spin{
     float junk;
 };  
 
+int counter(string x){
+    ifstream InputFile(x);
+    string  line;
+    int N = 0;
+    for (int i = 0; getline(InputFile, line); i++)
+    {
+        N++;
+    }
+    return N;
+}
+
 int main(){
 // File initilization
 
@@ -23,6 +33,7 @@ int main(){
     
 // Filling spin of data
     double is_eneregy = 0;
+    double N = counter("XMCD#0000_rotated_norm.txt");
 
     string line;
     
@@ -43,32 +54,35 @@ int main(){
 
     }
 
-    cout << "Число строк в файле: " << k << endl; 
+    cout << "Число строк в файле: " << N << endl; 
 
     double qmin = -5;
-    double qmax = 5.1;
+    double qmax = 5;
     double dq = 0.1;
 
     int stepsQ = (qmax-qmin)/dq;
+    printf("stepsQ = %d\n", stepsQ);
+    
     int totalSteps = stepsQ*stepsQ;
+    printf("totalSteps = %d\n", totalSteps);
 
-    for (int m=0; m<=totalSteps; m++){
-        double qx = qmin + totalSteps / stepsQ * dq;
-        double qy = qmin + totalSteps % stepsQ * dq;
+    // qx and qy must be turned into vector<>;
 
-        printf("%d", qx);
-        printf("%d", qy);
+#pragma omp for
+    for (int m = 0; m <= totalSteps; m++){
+        double qx = qmin + (m / stepsQ) * dq;
+        double qy = qmin + (m % stepsQ) * dq;
 
         for(int i = 0; i < k; i++){
             for(int j = 0; j < k; j++){
 
-                float value = (qx * (spin[i].x - spin[j].x) + qy * (spin[i].y - spin[j].y));
+                double value = (qx * (spin[i].x - spin[j].x) + qy * (spin[i].y - spin[j].y));
 
                 is_eneregy += (spin[i].mx * spin[j].mx + spin[i].my * spin[j].my) * cos(value);     
             }
         }
-        is_eneregy = is_eneregy * (1/k);
-        //OutputFile << is_eneregy << ' ' << qx << ' ' << qy << endl;
+        is_eneregy = is_eneregy * (1/N);
+        cout << is_eneregy << ' ' << qx << ' ' << qy << endl;
     }
     InputFile.close();
     return 0;
