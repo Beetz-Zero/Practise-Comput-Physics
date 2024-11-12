@@ -43,24 +43,35 @@ int main(){
 
     }
 
-    cout << "Число строк в файле: " << k << endl;  
+    cout << "Число строк в файле: " << k << endl; 
 
-    for(double qx = -5; qx < 5.1f; qx += .1f){    
-        for(double qy = -5; qy < 5.1f; qy += .1f){
+    double qmin = -5;
+    double qmax = 5.1;
+    double dq = 0.1;
 
-            for(int i = 0; i < k; i++){
-                for(int j = 0; j < k; j++){
+    int stepsQ = (qmax-qmin)/dq;
+    int totalSteps = stepsQ*stepsQ;
 
-                    float value = (qx * (spin[i].x - spin[j].x) + qy * (spin[i].y - spin[j].y));
+    for (int m=0; m<=totalSteps; m++){
+        double qx = qmin + totalSteps / stepsQ * dq;
+        double qy = qmin + totalSteps % stepsQ * dq;
 
-                    is_eneregy += (spin[i].mx * spin[j].mx + spin[i].my * spin[j].my) * cos(value);     
-                }
+        printf("%d", qx);
+        printf("%d", qy);
+
+        for(int i = 0; i < k; i++){
+            for(int j = 0; j < k; j++){
+
+                float value = (qx * (spin[i].x - spin[j].x) + qy * (spin[i].y - spin[j].y));
+
+                is_eneregy += (spin[i].mx * spin[j].mx + spin[i].my * spin[j].my) * cos(value);     
             }
-            is_eneregy = is_eneregy * (1/k);
-            OutputFile << is_eneregy << ' ' << qx << ' ' << qy << endl;
         }
+        is_eneregy = is_eneregy * (1/k);
+        //OutputFile << is_eneregy << ' ' << qx << ' ' << qy << endl;
     }
-    
     InputFile.close();
     return 0;
 }
+    
+    
